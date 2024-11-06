@@ -17,15 +17,15 @@
                     <label for="id"><strong>ID:</strong></label>
                     <input type="text" id="id" name="userName" th:value="${memberProfileDto.userName}" readonly>
                 </div>
-                <!-- 사용자의 이름을 수정할 수 있게 표시 -->
-                <div class="form-group">
-                    <label for="name"><strong>이름:</strong></label>
-                    <input type="text" id="name" name="name" th:value="${memberProfileDto.name}">
-                </div>
                 <!-- 사용자의 이메일을 수정할 수 있게 표시 -->
                 <div class="form-group">
                     <label for="email"><strong>이메일:</strong></label>
                     <input type="email" id="email" name="email" th:value="${memberProfileDto.email}">
+                </div>
+                <!-- 사용자의 이름을 수정할 수 있게 표시 -->
+                <div class="form-group">
+                    <label for="name"><strong>이름:</strong></label>
+                    <input type="text" id="name" name="name" th:value="${memberProfileDto.name}">
                 </div>
                 <!-- 사용자의 생년월일을 수정할 수 있게 표시 -->
                 <div class="form-group">
@@ -51,9 +51,10 @@
                 </div>
                 <!-- 사용자의 프로필 사진을 수정할 수 있게 표시 -->
                 <div class="form-group">
-                    <label for="profilePicture"><strong>프로필 사진:</strong></label><br>
-                    <img th:src="${memberProfileDto.profileImgUrl}" alt="Profile Picture" style="width: 100px; height: 100px;">
-                    <input type="file" id="profilePicture" name="profilePicture">
+                    <label for="profilePicture"><strong>프로필 사진</strong></label><br>
+                    <!--<img th:src="${memberProfileDto.profileImgUrl}" alt="Profile Picture" style="width: 100px; height: 100px;">-->
+                    <img id="previewImage" th:src="${memberProfileDto.profileImgUrl}" alt="Profile Picture" style="width: 100px; height: 100px;">
+                    <input type="file" id="profilePicture" name="profilePicture" accept="image/*" onchange="previewImage(event)">
                 </div>
                  <!--사용자의 카테고리를 선택할 수 있게 표시-->
                 <div class="form-group">
@@ -86,5 +87,25 @@
             <button type="submit" class="btn btn-primary">완료</button>
         </div>
     </form>
+    <!-- 이미지 미리보기를 위한 JavaScript 코드 -->
+    <script>
+        function previewImage(event) {
+            console.log("파일 선택 이벤트 호출됨"); // 디버깅을 위한 로그
+            var file = event.target.files[0];
+            if (!file) {
+                console.log("파일이 선택되지 않음");
+                return;
+            }
+
+            console.log("선택된 파일: " + file.name); // 디버깅을 위한 로그
+            var reader = new FileReader();
+            reader.onload = function() {
+                var output = document.getElementById('previewImage');
+                output.src = reader.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    </script>
+</div>
 </body>
 </html>

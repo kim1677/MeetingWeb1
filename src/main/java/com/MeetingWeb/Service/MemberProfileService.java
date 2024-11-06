@@ -69,15 +69,27 @@ public class MemberProfileService {
         MultipartFile profilePicture = memberProfileDto.getProfilePicture();
         if (profilePicture != null && !profilePicture.isEmpty()) {
             try {
+                // 기존 이미지 파일 삭제
+                if (user.getProfileImgUrl() != null && !user.getProfileImgUrl().isEmpty()) {
+                    // 기존 경로에서 파일 이름 추출
+                    String existingFileName = user.getProfileImgUrl().substring(user.getProfileImgUrl().lastIndexOf("/") + 1);
+                    Path existingFilePath = Paths.get("src/main/resources/static/img/category", existingFileName);
+
+                    // 파일이 존재하면 삭제
+                    if (Files.exists(existingFilePath)) {
+                        Files.delete(existingFilePath);
+                    }
+                }
+
                 // 파일 저장 경로 설정
                 String fileName = UUID.randomUUID().toString() + "_" + profilePicture.getOriginalFilename();
-                Path filePath = Paths.get("path/to/save/directory", fileName);
+                Path filePath = Paths.get("src/main/resources/static/img/category", fileName);
 
                 // 파일 저장
                 Files.copy(profilePicture.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-                // 저장된 파일의 경로를 user 엔터티에 설정
-                user.setProfileImgUrl("/path/to/save/directory/" + fileName);
+                // 저장된 파일의 경로를 user 엔터에 설정
+                user.setProfileImgUrl("/img/category/" + fileName);
             } catch (IOException e) {
                 e.printStackTrace();
                 throw new RuntimeException("파일 저장 중 오류가 발생했습니다.");
