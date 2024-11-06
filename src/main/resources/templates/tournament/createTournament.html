@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragment/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>대회 만들기</title>
+    <script src="https://cdn.tiny.cloud/1/v66zwuo2z8kbdl4t3rglfdpi9lmstor02zcg46dlh7k7q83b/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+
+    <link rel="stylesheet" href="/css/createTournament.css">
+
+    <script>
+        tinymce.init({
+            selector: '#description',
+            plugins: 'image link',
+            toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | image link',
+            images_upload_url: '/img',
+            automatic_uploads: true,
+            file_picker_types: 'image',
+            images_upload_handler: function (blobInfo, success, failure) {
+                const formData = new FormData();
+                formData.append('file', blobInfo.blob(), blobInfo.filename());
+
+                fetch('/img', {
+                    method: 'POST',
+                    body: formData
+                }).then(response => response.json())
+                    .then(data => {
+                        console.log("Uploaded image URL:", data.location);
+                        success(data.location);
+                    })
+                    .catch(() => failure('Image upload failed'));
+            }
+        });
+    </script>
+</head>
+
+<div layout:fragment="body" id="createTournamentMain">
+
+    <div id="textBox">
+        <p id="tournamentListText"><a href="">대회 목록</a></p>
+        <p id="tournamentCreateText"><span class="highlight">대회 만들기</span></p>
+        <p id="participationText"><a href="">참가 대회</a></p>
+    </div>
+
+    <!-- 알림 메시지 표시 -->
+    <div th:if="${errorMessage}" style="color: red;">
+        <p th:text="${errorMessage}"></p>
+    </div>
+
+    <form id="createTournamentForm" action="/tournament/createTournament" th:object="${trnDto}" method="post" enctype="multipart/form-data">
+
+        <div class="inputBox" id="imgBox">
+            <label th:for="tournamentImg">대표 이미지</label>
+            <input type="file" th:field="*{tournamentImg}" accept="image/*"/><br>
+        </div>
+
+        <div class="inputBox">
+            <label th:for="title">대회 이름</label>
+            <input type="text" th:field="*{title}" required/><br>
+        </div>
+
+        <div class="inputBox">
+            <label th:for="description">내용</label>
+            <textarea id="description" th:field="*{description}"></textarea><br>
+        </div>
+
+        <div class="inputBox">
+            <label>카테고리</label>
+            <div id="categoryInput">
+                <div th:each="tournamentCategory : ${categories}">
+                    <input type="radio" th:field="*{category}" th:value="${tournamentCategory.getTournamentCategoryId()}">
+                    <span th:text="${tournamentCategory.category}"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="inputBox">
+            <label th:for="receipStart">접수 시작</label>
+            <input type="datetime-local" th:field="*{receiptStart}" required/><br>
+        </div>
+
+        <div class="inputBox">
+            <label th:for="receipEnd">접수 종료</label>
+            <input type="datetime-local" th:field="*{receiptEnd}" required/><br>
+        </div>
+
+        <div class="inputBox">
+            <label th:for="startDate">대회 시작</label>
+            <input type="datetime-local" th:field="*{startDate}" required/><br>
+        </div>
+
+        <div class="inputBox">
+            <label th:for="endDate">대회 종료</label>
+            <input type="datetime-local" th:field="*{endDate}" required/><br>
+        </div>
+
+        <div class="inputBox">
+            <label th:for="format">토너먼트 형식</label>
+            <select id="format" th:field="*{format}">
+                <option value="4">4강</option>
+                <option value="8">8강</option>
+                <option value="16">16강</option>
+            </select>
+        </div>
+
+        <!-- 생성자 ID (hidden field) -->
+        <input type="hidden" th:field="*{createdBy}"/><br>
+
+        <div id="btWrap">
+            <button id="createTournamentBt" type="submit">생성</button>
+        </div>
+    </form>
+</div>
+
+</html>

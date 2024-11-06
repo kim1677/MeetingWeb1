@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Member Profile</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<div class="container">
+    <h1>마이페이지</h1>
+    <form th:action="@{/start/updateProfile}" method="post" enctype="multipart/form-data">
+        <!-- 기존 입력 필드들 -->
+        <div class="container">
+            <div class="mypage">
+                <!-- 사용자의 ID를 수정 불가능하게 표시 -->
+                <div class="form-group">
+                    <label for="id"><strong>ID:</strong></label>
+                    <input type="text" id="id" name="userName" th:value="${memberProfileDto.userName}" readonly>
+                </div>
+                <!-- 사용자의 이름을 수정할 수 있게 표시 -->
+                <div class="form-group">
+                    <label for="name"><strong>이름:</strong></label>
+                    <input type="text" id="name" name="name" th:value="${memberProfileDto.name}">
+                </div>
+                <!-- 사용자의 이메일을 수정할 수 있게 표시 -->
+                <div class="form-group">
+                    <label for="email"><strong>이메일:</strong></label>
+                    <input type="email" id="email" name="email" th:value="${memberProfileDto.email}">
+                </div>
+                <!-- 사용자의 생년월일을 수정할 수 있게 표시 -->
+                <div class="form-group">
+                    <label for="birthDate"><strong>생년월일:</strong></label>
+                    <input type="date" id="birthDate" name="birthDate" th:value="${memberProfileDto.birthDate}" readonly>
+                </div>
+                <!-- 사용자의 성별을 선택할 수 있게 표시 (버튼 형태) -->
+                <div class="form-group">
+                    <label><strong>성별:</strong></label>
+                    <div class="gender-selection">
+                        <input type="radio" id="male" name="gender" value="MALE" th:checked="${memberProfileDto.gender == 'MALE'}">
+                        <label for="male" class="gender-button">남자</label>
+                        <input type="radio" id="female" name="gender" value="FEMALE" th:checked="${memberProfileDto.gender == 'FEMALE'}">
+                        <label for="female" class="gender-button">여자</label>
+                        <input type="radio" id="other" name="gender" value="OTHER" th:checked="${memberProfileDto.gender == 'OTHER'}">
+                        <label for="other" class="gender-button">선택하지 않음</label>
+                    </div>
+                </div>
+                <!-- 사용자의 활동 지역을 수정할 수 있게 표시 -->
+                <div class="form-group">
+                    <label for="activityArea"><strong>활동 지역:</strong></label>
+                    <input type="text" id="activityArea" name="activityArea" th:value="${memberProfileDto.activityArea}">
+                </div>
+                <!-- 사용자의 프로필 사진을 수정할 수 있게 표시 -->
+                <div class="form-group">
+                    <label for="profilePicture"><strong>프로필 사진:</strong></label><br>
+                    <img th:src="${memberProfileDto.profileImgUrl}" alt="Profile Picture" style="width: 100px; height: 100px;">
+                    <input type="file" id="profilePicture" name="profilePicture">
+                </div>
+                 <!--사용자의 카테고리를 선택할 수 있게 표시-->
+                <div class="form-group">
+                    <label><strong>카테고리 (중복 가능):</strong></label>
+                    <div class="category-selection">
+                        <input type="checkbox" id="game" name="selectedCategories" value="게임" th:checked="${memberProfileDto.selectedCategories.contains('게임')}">
+                        <label for="game">게임</label>
+                        <input type="checkbox" id="sports" name="selectedCategories" value="스포츠" th:checked="${memberProfileDto.selectedCategories.contains('스포츠')}">
+                        <label for="sports">스포츠</label>
+                        <input type="checkbox" id="travel" name="selectedCategories" value="여행" th:checked="${memberProfileDto.selectedCategories.contains('여행')}">
+                        <label for="travel">여행</label>
+                        <input type="checkbox" id="study" name="selectedCategories" value="스터디" th:checked="${memberProfileDto.selectedCategories.contains('스터디')}">
+                        <label for="study">스터디</label>
+                        <input type="checkbox" id="cooking" name="selectedCategories" value="요리" th:checked="${memberProfileDto.selectedCategories.contains('요리')}">
+                        <label for="cooking">요리</label>
+                        <input type="checkbox" id="reading" name="selectedCategories" value="독서" th:checked="${memberProfileDto.selectedCategories.contains('독서')}">
+                        <label for="reading">독서</label>
+                        <input type="checkbox" id="friends" name="selectedCategories" value="친목" th:checked="${memberProfileDto.selectedCategories.contains('친목')}">
+                        <label for="friends">친목</label>
+                        <input type="checkbox" id="pet" name="selectedCategories" value="반려동물" th:checked="${memberProfileDto.selectedCategories.contains('반려동물')}">
+                        <label for="pet">반려동물</label>
+                        <input type="checkbox" id="beauty" name="selectedCategories" value="미용" th:checked="${memberProfileDto.selectedCategories.contains('미용')}">
+                        <label for="beauty">미용</label>
+                        <input type="checkbox" id="selfDevelopment" name="selectedCategories" value="자기개발" th:checked="${memberProfileDto.selectedCategories.contains('자기개발')}">
+                        <label for="selfDevelopment">자기개발</label>
+                    </div>
+                </div>
+            </div>
+            <!-- 프로필 저장 버튼 -->
+            <button type="submit" class="btn btn-primary">완료</button>
+        </div>
+    </form>
+</body>
+</html>
